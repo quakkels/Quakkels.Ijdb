@@ -1,0 +1,12 @@
+﻿@model IEnumerable<JokeViewModel>
+@{
+    ViewData["Title"] = "Jokes";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Jokes</h1>
+    @foreach (var joke in Model)
+    {
+        <p>@joke.Joke</p>
+    }
+</div>  
