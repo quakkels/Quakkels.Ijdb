@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Linq;
 using Quakkels.Ijdb.Domain.Jokes.SubmitJoke;
 
 namespace Quakkels.Ijdb.Domain.Jokes

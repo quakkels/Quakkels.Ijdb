@@ -13,6 +13,11 @@ namespace Quakkels.Ijdb.Web.Controllers
         private readonly IJokesService _jokesService;
         private readonly ILogger<JokesController> _logger;
 
+        private const string SuccessMessage =
+            "Thanks for submitting a... I guess this could be a joke. Keep at it, tiger.";
+
+        private const string FailureMessage = "You call that a joke?";
+
         public JokesController(
             IJokesService jokesService,
             ILogger<JokesController> logger)
@@ -29,7 +34,7 @@ namespace Quakkels.Ijdb.Web.Controllers
 
             return View(viewModel);
         }
-        
+
         [HttpGet]
         public IActionResult Submit()
         {
@@ -37,15 +42,23 @@ namespace Quakkels.Ijdb.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Submit(string joke)
+        public async Task<IActionResult> Submit(SubmitJokeViewModel model)
         {
-            if (string.IsNullOrEmpty(joke))
+            if (string.IsNullOrEmpty(model.Joke))
             {
-                ViewBag.Message = "You call that a joke?";
+                ViewBag.Message = FailureMessage;
                 return View();
             }
 
-            var result = await _jokesService.SubmitJoke(new SubmitJokeRequest(joke));
+            // trap spammers
+            if (!string.IsNullOrEmpty(model.Name) || !string.IsNullOrEmpty(model.Email))
+            {
+                _logger.LogWarning("Honeypot captured spam");
+                ViewBag.Message = SuccessMessage; // show fake success
+                return RedirectToAction(nameof(Index));
+            }
+
+            var result = await _jokesService.SubmitJoke(new SubmitJokeRequest(model.Joke));
 
             if (!result.Success)
             {
@@ -53,8 +66,8 @@ namespace Quakkels.Ijdb.Web.Controllers
                 return View();
             }
 
-            ViewBag.Message = "Thanks for submitting a... I guess this could be a joke. Keep at it, tiger.";
+            ViewBag.Message = SuccessMessage;
             return RedirectToAction(nameof(Index));
         }
-}
+    }
 }

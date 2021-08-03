@@ -7,5 +7,9 @@
 <form method="post">
     <label for="joke">Your joke</label>
     <input id="joke" name="joke" value="@Model"/>
+    <label class="form-decoration" for="name"></label>
+    <input class="form-decoration" autocomplete="off" type="text" id="name" name="name" placeholder="Your name here">
+    <label class="form-decoration" for="email"></label>
+    <input class="form-decoration" autocomplete="off" type="email" id="email" name="email" placeholder="Your e-mail here">
     <button type="submit">Submit Joke</button>
 </form>
